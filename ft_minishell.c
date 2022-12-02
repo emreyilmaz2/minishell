@@ -9,6 +9,7 @@ size_t	ft_strlen(const char *str)
 		i++;
 	return (i);
 }
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t			cnt;
@@ -32,8 +33,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	i;
 	size_t	y;
 
-		i = 0;
-		y = 0;
+	i = 0;
+	y = 0;
 	s3 = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	while (i < ft_strlen(s1))
 	{
@@ -49,12 +50,37 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s3[i] = '\0';
 	return (s3);
 }
-char *ft_name(char *name)
+void	ft_name(t_data *can, char **env)
 {
-	name = malloc(sizeof(char) * 17 + 1); 
-	name = strcat(name, "\033[0;32m@minishell-> \033[0m");
-	// name = ft_strjoin(getenv("USER"),"\033[0;32m @minishell->\033[0m");
-	return (name);
+	can->name = ft_strjoin(getenv("USER"),"\033[0;32m@minishell->\033[0m");
+}
+
+void get_readline(t_data *can)
+{
+	if(can->data)
+	{
+		free(can->data);
+		
+	}
+	can->data = readline(can->name);
+	if(can->data)
+		add_history(can->data);
+}
+
+void	ft_loop(t_data *can)
+{
+	int k;
+	while(1)
+	{
+
+		get_readline(can);
+		can->str = ft_split(can->data, ' ');
+		which_command(can->str, can);
+		k = 0;
+		while(can->str[k])
+			free(can->str[k++]);
+		free(can->str);
+	}
 }
 
 void which_command(char **str, t_data *not_parsed)
@@ -64,9 +90,9 @@ void which_command(char **str, t_data *not_parsed)
 	else if(!ft_strcmp(*str,"echo"))
 	{
 		if(!ft_strcmp(*(++str),"-n"))
-			which_echo_command(not_parsed->lol, 0);
+			which_echo_command(not_parsed->data, 0);
 		else
-			which_echo_command(not_parsed->lol, 1);
+			which_echo_command(not_parsed->data, 1);
 	}
 	else if(!ft_strcmp(*str,"env"))
 	{
@@ -78,7 +104,6 @@ void which_command(char **str, t_data *not_parsed)
 	}
 	else if(!ft_strcmp(*str,"cd"))
 	{
-
 	}
 	else if(!ft_strcmp(*str,"ls"))
 	{
@@ -88,52 +113,12 @@ void which_command(char **str, t_data *not_parsed)
 		write(1, "~not a command~\n", 16);
 }
 
-int main(void)
-{ 
-	// t_list *list;
-	// list = malloc(sizeof(t_list));
+int main(int argc, char **argv, char **env)
+{
 	t_data *can;
-	char *name = NULL;
 	can = malloc(sizeof(t_data));
-	name = ft_name(name);
-	while(1)
-	{
-		can->lol = readline(name);
-		char **str = split(can->lol, ' ');
-		which_command(str, can);
-		free(str);
-		// int x = 0;
-		// char *str = malloc(sizeof(char *));
-		// printf("->");
-		// scanf("%d", &x);
-		// if(x == 1)
-		// 	return(0);
-		// else
-		// {
-		// 	scanf(" %[^\n]",str);
-		// 	char **toto = split(str, ' ');
-		// 	for(int i=0; toto[i]; i++)
-		// 		printf("%s\n", toto[i]);
-		// }
+	can->name = NULL;
+	ft_name(can,env);
+	ft_loop(can);
 
-
-			// printf("%sA\n", split(argv[1], '-')[1]);
-	}
-	// while(list->next != NULL && list->branch != NULL)
-	// {
-		
-	// }
-	// char *str;
-	// int len = 0;
-	// int i = 1;
-	// int j = 0;
-	// while(i < argc && argv[i])
-	// {
-	// 	j = 0;
-	// 	while(argv[i][j++])
-	// 		len++;
-	// 	i++;
-	// }
-	// str = (char *)malloc(sizeof(char) * len + 1);
-	//heredoc var mı yok mu bakmadım buraya bak
 }
