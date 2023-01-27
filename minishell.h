@@ -6,7 +6,7 @@
 /*   By: emyilmaz <emyilmaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:13:43 by emyilmaz          #+#    #+#             */
-/*   Updated: 2023/01/25 10:03:55 by emyilmaz         ###   ########.fr       */
+/*   Updated: 2023/01/27 16:12:43 by emyilmaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,13 +123,14 @@ void	trying_find_cmd(t_main_list **m_list, char ***all_path);
 
 void	ft_export(t_main_list *m_list);
 void	ft_unset(t_main_list *m_list);
-int	env_check(t_main_list *m_list);
+int	env_check(char *ptr);
 
 
 void print_list(t_mini *sadi);
 //export and unset
 void	ft_unset(t_main_list *m_list);
-int	env_check(t_main_list *m_list);
+void	ft_unset_export(int line);
+void	ft_unset_env(int line);
 
 //functions for append
 void	append_fd(t_main_list *m_list);

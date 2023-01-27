@@ -6,7 +6,7 @@
 /*   By: emyilmaz <emyilmaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 02:02:05 by emyilmaz          #+#    #+#             */
-/*   Updated: 2023/01/25 09:36:34 by emyilmaz         ###   ########.fr       */
+/*   Updated: 2023/01/27 18:42:15 by emyilmaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,43 +16,75 @@ void	ft_unset(t_main_list *m_list)
 {
 	int (line) = 0;
 	int (i) = 0;
-    char **temp = calloc(sizeof(char *), 100);
 
 	if (!fix_cmp("unset", m_list->args[0]) && !m_list->args[1])
-    {
-        two_d_free(temp);
         return ;
-    }
 	else if(!fix_cmp("unset", m_list->args[0]) && m_list->args[1])
 	{
-		line = env_check(m_list);
+		line = env_check(m_list->args[1]);
 		if(line > 0)
 		{
-            while(line != i && g_list->environment[i] && i < g_list->sayac)
-            {
-                temp[i] = ft_strdup(g_list->environment[i]);
-                i++;
-            }
-            int j = i;
-            i++;
-            while(i < g_list->sayac)
-            {
-                temp[j] = ft_strdup(g_list->environment[i]);
-                j++;
-                i++;
-            }
-            i = 0;
-            while(temp[i] && i < g_list->sayac)
-            {
-                free(g_list->export[i]);
-                g_list->environment[i] = ft_strdup(temp[i]);
-                g_list->export[i] = ft_strdup(temp[i]);
-                i++;
-            }
-            g_list->sayac--;
+			ft_unset_env(line);
+			ft_unset_export(line);
 		}
-        two_d_free(temp);
 	}
+}
+
+void	ft_unset_env(int line)
+{
+	char **temp = calloc(sizeof(char *), 100);
+	int i = 0;
+    while(line != i && g_list->environment[i] && i < g_list->sayac)
+    {
+        temp[i] = ft_strdup(g_list->environment[i]);
+        i++;
+    }
+    int j = i;
+    i++;
+    while(i < g_list->sayac && g_list->environment[i])
+    {
+        temp[j] = ft_strdup(g_list->environment[i]);
+        j++;
+        i++;
+    }
+    i = 0;
+    while(temp[i])
+    {
+        free(g_list->environment[i]);
+        g_list->environment[i] = ft_strdup(temp[i]);
+        i++;
+    }
+    g_list->sayac--;
+	two_d_free(temp);
+}
+
+void	ft_unset_export(int line)
+{
+	char **temp = calloc(sizeof(char *), 100);
+	int (i) = -1;
+	int t;
+    while(++i >= 0 && line != i && g_list->export[i])
+        temp[i] = ft_strdup(g_list->export[i]);
+    int j = i;
+    while(g_list->export[++i])
+    {
+        temp[j] = ft_strdup(g_list->export[i]);
+        j++;
+    }
+    i = -1;
+    while(temp[++i])
+    {
+        free(g_list->export[i]);
+        g_list->export[i] = ft_strdup(temp[i]);
+    }
+	t = i;
+    while(g_list->export[i])
+    {
+        free(g_list->export[i]);
+        i++;
+    }
+	g_list->export[t] = NULL;
+	two_d_free(temp);
 }
 
 void	ft_export(t_main_list *m_list)
@@ -70,7 +102,7 @@ void	ft_export(t_main_list *m_list)
 	}
 	else if(!fix_cmp("export", m_list->args[0]) && ft_strchr(m_list->args[1], '='))
 	{
-		line = env_check(m_list);
+		line = env_check(m_list->args[1]);
 		if(line > 0)
 		{
 			free(g_list->environment[line]);
@@ -80,9 +112,9 @@ void	ft_export(t_main_list *m_list)
 		}
 		else
 		{
-			free(g_list->environment[g_list->sayac]);
+			if(g_list->environment[g_list->sayac])
+				free(g_list->environment[g_list->sayac]);
 			g_list->environment[g_list->sayac++] = ft_strdup(m_list->args[1]);
-			free(g_list->export[k]);
 			k = twod_len(g_list->export);
 			g_list->export[k] = ft_strdup(m_list->args[1]);
 		}
@@ -94,7 +126,7 @@ void	ft_export(t_main_list *m_list)
 	}
 }
 
-int	env_check(t_main_list *m_list)
+int	env_check(char *ptr)
 {
 	int (i) = 0;
 	int (j) = 0;
@@ -102,9 +134,9 @@ int	env_check(t_main_list *m_list)
 	char *temp1;
 	char *temp2;
 
-	while (m_list->args[1][len] && m_list->args[1][len] != '=')
+	while (ptr[len] && ptr[len] != '=')
 		len++;
-	temp1 = ft_substr(m_list->args[1], 0, len);
+	temp1 = ft_substr(ptr, 0, len);
 	while(i < g_list->sayac && g_list->environment[i])
 	{
 		j = 0;

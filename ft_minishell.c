@@ -1,122 +1,7 @@
 #include "minishell.h"
 
 t_env	*g_list;
-// void print(char *s)
-// {
-// 	printf("   |-------%*s%*s-------|\n",10+(int)strlen(s)/2,s,10-(int)strlen(s)/2,"");
-// }
 
-// void	print_nodes(t_main_list	*node_list)
-// {
-// 	int i = 0;
-// 	int m = 0;
-// 	while (node_list)
-// 	{
-// 		printf("bu buraya %d. gelisim\n",m+1);
-//         printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d pipe_cmd--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 		print(node_list->pipe_cmd);
-//         printf("   |__________________________________|\n");
-// 		printf("bu buraya %d. gelisim\n",m+1);
-//         printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d infile_name--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 		// if(node_list->infile_name)
-// 		// {
-// 		// 		i = -1;
-// 		// 	while(node_list->infile_name[++i])
-// 		// 		print(node_list->infile_name[i]);
-// 		// }
-// 		// else 
-// 		//	printf("-\n");
-//         printf("   |__________________________________|\n");
-// 				printf("bu buraya %d. gelisim\n",m+1);
-//         printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d outfile_name_l--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 			if(node_list->outfile_name_l)
-// 		{
-// 			i = -1;
-// 			while(node_list->outfile_name_l[++i])
-// 				print(node_list->outfile_name_l[i]);
-// 		}
-// 		else
-// 			printf("-\n");
-// 	    printf("   |__________________________________|\n");
-// 				printf("bu buraya %d. gelisim\n",m+1);
-//         printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d outfile_name_r--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 			if(node_list->outfile_name_r)
-// 		{
-// 			i = -1;
-// 			while(node_list->outfile_name_r[++i])
-// 				print(node_list->outfile_name_r[i]);
-// 		}
-// 		else 
-// 			printf("-\n");
-// 		printf("   |__________________________________|\n");
-// 				printf("bu buraya %d. gelisim\n",m+1);
-//         printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d eof --------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 		if(node_list->eof)
-// 			print(node_list->eof);
-//         printf("   |__________________________________|\n");
-// 				printf("bu buraya %d. gelisim\n",m+1);
-//         printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d append_r--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 		if(node_list->append_r)
-// 		{
-// 			i = -1;
-// 			while(node_list->append_r[++i])
-// 				print(node_list->append_r[i]);
-// 		}
-// 		else
-// 			printf("-\n");
-// 		printf("   |__________________________________|\n");
-// 				printf("bu buraya %d. gelisim\n",m+1);
-//         printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d append_l--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 		if(node_list->append_l)
-// 		{
-// 			i = -1;
-// 			while(node_list->append_l[++i])
-// 				print(node_list->append_l[i]);
-// 		}
-// 		else 
-// 			printf("-\n");
-// 		printf("   |__________________________________|\n");
-// 				printf("bu buraya %d. gelisim\n",m+1);
-//         printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d cmd--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 		if(node_list->cmd)
-// 			print(node_list->cmd);
-//         else
-// 			printf("-\n");
-// 		printf("   |__________________________________|\n");
-// 		    printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d flag--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 			if(node_list->flag)
-// 			print(node_list->flag);
-//         else
-// 			printf("-\n");
-//         printf("   |__________________________________|\n");
-// 		printf("   ____________________________________\n");
-//         printf("   |--------------NODE %d args--------------|\n", (m++)+1);
-//         printf("   |----------------------------------|\n");
-// 		i = -1;
-// 		// while(node_list->args[++i])
-// 		// 	printf("%s\n",node_list->args[i]);
-//         printf("   |__________________________________|\n");
-// 		node_list = node_list->next;
-// 	}
-// }
 void	convert_space2(t_main_list **m_list)
 {
 	int (j) = 0;
@@ -228,7 +113,6 @@ void	signal_replace_line(int num)
 	(void)num;
 	printf("\n");
 	printf("%s", g_list->name);
-	fflush(stdout);
 	// rl_replace_line("", 0);
 	// rl_on_new_line();
 	// rl_redisplay();
@@ -391,10 +275,31 @@ void ft_pwd(t_main_list *m_list, t_expander *exp)
 	free(arr);
 }
 
+char	*get_env_after_equal(char *ptr)
+{
+	char	*temp;
+	int (i) = 0;
+	while(ptr[i] != '=')
+		i++;
+	temp = ft_substr(ptr, i+1, ft_strlen(ptr));
+	return(temp);
+}
+
+char	*ft_(char *ptr)
+{
+	char	*temp;
+	int (i) = 0;
+	while(ptr[i] != '=')
+		i++;
+	temp = ft_substr(ptr, i+1, ft_strlen(ptr));
+	return(temp);
+}
+
 void ft_cd(t_main_list *m_list, t_expander **exp)
 {
 	char *arr;
-	char *tmp;
+	char *temp0;
+	char *temp1;
 	char *lol;
 	int (i) = 0;
 	int (j) = -1;
@@ -413,17 +318,11 @@ void ft_cd(t_main_list *m_list, t_expander **exp)
 			if(!fix_cmp(m_list->args[i], m_list->cmd))
 			{	
 				i++;
-				tmp = ft_strdup(m_list->args[i]);
+				temp0 = ft_strdup(m_list->args[i]);
 			}
 			i++;
 		}
-		// i = -1;
-		// while(g_list->environment[i])
-		// {
-		// 	if(ft_str_in_str(g_list->environment[i],0,"OLDPWD"))
-		// }
-		// //g_list->enviroment
-		if(chdir(tmp))
+		if(chdir(temp0))
 		{
 			printf("arr: \n");
 			free((*exp)->env_tail[j]);
@@ -431,11 +330,18 @@ void ft_cd(t_main_list *m_list, t_expander **exp)
 			// update_env(exp,j);
 		}
 		free(arr);
-		free(tmp);
+		free(temp0);
 	}
 	else
+	{
+		char *oldpwd = ft_strdup("OLDPWD=");
+		char *oldpwd2 = get_env_after_equal(g_list->environment[env_check("PWD")]);
+		ft_strlcat(oldpwd, oldpwd2, 100);
+		printf(" oldpwd -> %s", oldpwd);
 		chdir("~");
+	}
 }
+
 
 void ft_env()
 {
@@ -454,8 +360,8 @@ void which_buildin(t_main_list *m_list, t_expander *exp)
 {
     if(!ft_strcmp(m_list->args[0], "echo"))
         ft_echo(m_list);
-    // else if(!ft_strcmp(m_list->args[0], "cd"))
-    //     ft_cd(m_list, &exp);
+    else if(!ft_strcmp(m_list->args[0], "cd"))
+        ft_cd(m_list, &exp);
     else if(!ft_strcmp(m_list->args[0], "pwd"))
         ft_pwd(m_list,exp);
     else if(!ft_strcmp(m_list->args[0], "export"))
@@ -555,11 +461,14 @@ int main(int argc, char **argv, char **env)
 {
     int i = -1;
     g_list = malloc(sizeof(t_env));
-    g_list->environment = env;
+	g_list->environment = malloc(sizeof(char *) *100);
+	while(env[++i])
+		g_list->environment[i] = ft_strdup(env[i]);
     g_list->sayac = twod_len(g_list->environment);
 	g_list->name = ft_strdup("\033[0;34m@minishell-> \033[0m");
     g_list->export = malloc(sizeof(char *) * 100);
-    while (g_list->environment[++i])
+	i = -1;
+    while (env[++i])
 		g_list->export[i] = ft_strdup(env[i]);
     ft_loop();
     two_d_free(g_list->export);
