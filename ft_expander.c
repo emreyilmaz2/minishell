@@ -3,29 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expander.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ataskin <ataskin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: emyilmaz <emyilmaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 05:25:57 by emyilmaz          #+#    #+#             */
-/*   Updated: 2023/01/25 07:05:16 by ataskin          ###   ########.fr       */
+/*   Updated: 2023/01/31 00:28:58 by emyilmaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	no_greens(t_mini ***lst2)
-{
-	char	*arr;
-
-	arr = ft_strdup((**lst2)->data);
-	free((**lst2)->data);
-	(**lst2)->data = ft_strtrim2(arr, 34);
-	free(arr);
-}
-
-void	check_greens(t_mini **lst2, t_expander **exp)
+void	check_greens(t_mini **lst2, t_expander **exp, int j)
 {
 	int (i) = -1;
-	int (j) = 0;
 	if (ft_strchr((*lst2)->data, '$'))
 	{
 		(*exp)->temp_head = ft_substr((*lst2)->data, 0, \
@@ -40,6 +29,8 @@ void	check_greens(t_mini **lst2, t_expander **exp)
 				(*exp)->temp_tail = ft_substr((*lst2)->data, j + \
 				ft_strlen((*exp)->env_head[i]), ft_strlen((*lst2)->data));
 			}
+			else if ((*lst2)->data[j] == '?')
+				ft_expand_dollar(&exp, lst2, &j);
 			expander_trim_dquote(&lst2, &exp);
 		}
 	}
@@ -47,16 +38,24 @@ void	check_greens(t_mini **lst2, t_expander **exp)
 		no_greens(&lst2);
 }
 
+void	ft_expand_dollar(t_expander ***exp, t_mini **lst2, int *j)
+{
+	char *(temporary);
+	temporary = ft_itoa(g_list->exit_status);
+	(**exp)->temp = ft_strdup(temporary);
+	(**exp)->temp_tail = ft_substr((*lst2)->data, *j + \
+	ft_strlen(temporary), 4);
+	(*j)++;
+	free(temporary);
+}
+
 void	expander_uptade(t_mini *lst2, t_expander *exp)
 {
-	char	*arr;
-
-	int (k) = 0;
 	exp->temp = NULL ;
 	exp->temp_tail = NULL ;
 	exp->temp_head = NULL ;
 	if (check_dquote(lst2->data))
-		check_greens(&lst2, &exp);
+		check_greens(&lst2, &exp, 0);
 	else
 		expander_trim_squote(&lst2, &exp);
 }
@@ -70,16 +69,17 @@ void	head_and_tail(t_expander *expander)
 	expander->env_head = NULL ;
 	expander->env_tail = NULL ;
 	expander->env_head = calloc(sizeof(char *), \
-	(ft_two_dim_len(g_list->environment) + 1));
+	(ft_size_array(g_list->environment) + 1));
 	expander->env_tail = calloc(sizeof(char *), \
-	(ft_two_dim_len(g_list->environment) + 1));
+	(ft_size_array(g_list->environment) + 1));
 	while (g_list->environment[i])
 	{
 		expander->env_head[i] = ft_substr(g_list->environment[i], 0, \
 			ft_findlen(g_list->environment[i], '='));
 		expander->env_tail[i] = ft_substr(g_list->environment[i], \
 		ft_findlen(g_list->environment[i], '=') + 1, \
-		ft_strlen(g_list->environment[i]) - ft_findlen(g_list->environment[i], '='));
+		ft_strlen(g_list->environment[i]) - \
+			ft_findlen(g_list->environment[i], '='));
 		i++;
 	}
 }
@@ -88,9 +88,7 @@ t_expander	*expander(t_mini *list)
 {	
 	t_expander	*expander;
 
-	int (i) = 1;
-	int (j) = 0;
-	expander = malloc(sizeof(t_expander));
+	expander = ft_calloc(sizeof(t_expander), 1);
 	head_and_tail(expander);
 	while (list)
 	{

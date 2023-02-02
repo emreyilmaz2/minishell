@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_them_all.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ataskin <ataskin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: emyilmaz <emyilmaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 05:26:02 by emyilmaz          #+#    #+#             */
-/*   Updated: 2023/01/25 02:43:43 by ataskin          ###   ########.fr       */
+/*   Updated: 2023/01/31 00:37:22 by emyilmaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ void	free_t_main2(t_main_list *lst)
 		free(lst->cmd);
 	if (lst->flag)
 		free(lst->flag);
-	if (lst->outfile_name_l)
-		two_d_free(lst->outfile_name_l);
-	if (lst->outfile_name_r)
-		two_d_free(lst->outfile_name_r);
+	if (lst->outfile_l)
+		two_d_free(lst->outfile_l);
+	if (lst->outfile_r)
+		two_d_free(lst->outfile_r);
 	if (lst->eof)
 		free(lst->eof);
-	if (lst->two_d_cmd)
-		two_d_free(lst->two_d_cmd);
+	if (lst->tdm)
+		two_d_free(lst->tdm);
 	if (lst->args)
 		two_d_free(lst->args);
 }
@@ -72,7 +72,6 @@ void	free_t_main(t_main_list *lst)
 {
 	t_main_list	*tmp;
 
-	int (i) = 0;
 	while (lst)
 	{
 		tmp = lst;
@@ -83,10 +82,12 @@ void	free_t_main(t_main_list *lst)
 	}
 }
 
-void	multi_free(t_main_list *m_l, t_mini *list, t_expander *exp, t_data *can)
+void	multi_free(t_main_list *m_l, t_mini *list, t_expander *exp)
 {
-	free_t_expander(exp);
-	free_stack(list);
-	free_t_main(m_l);
-	two_d_free(can->str);
+	if (exp)
+		free_t_expander(exp);
+	if (list)
+		free_stack(list);
+	if (m_l)
+		free_t_main(m_l);
 }

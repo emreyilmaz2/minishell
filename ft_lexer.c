@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lexer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ataskin <ataskin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: emyilmaz <emyilmaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 13:58:46 by emyilmaz          #+#    #+#             */
-/*   Updated: 2023/01/25 04:12:22 by ataskin          ###   ########.fr       */
+/*   Updated: 2023/01/30 21:36:33 by emyilmaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ int	ft_check(char *str)
 	while (str[++i])
 	{
 		if (str[i] == '<' && ((str[i + 1] == '<' && str[i + 2] == '<')
-				|| str[i + 1] == '|'))
+				|| str[i + 1] == '|' || str[i + 1] == '>'))
 			return (0);
 		else if (str[i] == '>' && ((str[i + 1] == '>' && str[i + 2] == '>')
-				|| str[i + 1] == '|'))
+				|| str[i + 1] == '|' || str[i + 1] == '<'))
 			return (0);
 		else if (str[i] == '|' && (str[i + 1] == '|' || str[i + 1] == '>'
 				|| str[i + 1] == '<'))
@@ -46,25 +46,23 @@ int	ft_check(char *str)
 		else if (str[i] == '\"')
 			countd++;
 	}
-	if (!isEven(counts) || !isEven(countd))
+	if (counts % 2 || countd % 2)
 		return (-1);
 	return (1);
 }
 
 void	convert_space(char *str)
 {
-	int (j) = 0;
 	int (i) = 0;
 	int (flag) = 0;
-	while (str[i])
+	while (str[++i])
 	{
 		if (str[i] == '"')
 			flag++;
-		if (str[i] == ' ' && isEven(flag))
+		if (str[i] == ' ' && (flag % 2 == 0))
 			str[i] = '^';
-		else if(str[i] == ' ' && !isEven(flag))
+		else if (str[i] == ' ' && flag % 2)
 			str[i] = '`';
-		i++;
 	}
 }
 

@@ -1,12 +1,11 @@
+USERNAME= emyilmaz
 NAME	:= minishell
-
 CC		:= gcc
-INCLUDE	:= ./include
-CFLAGS	:= -ggdb -I $(INCLUDE) -I ./libft/source
+INCLUDE	:= ./include -I/Users/emyilmaz/goinfre/homebrew/Cellar/readline/8.2.1/include 
+CFLAGS	:= -ggdb -I $(INCLUDE)
 LIBFT	= libft
-#FLAGS	= #-Wall
 READLINE = -lreadline -L /goinfre/homebrew/opt/readline/lib
-FLAGS = -I homebrew/opt/readline/include
+FLAGS = -Wall -Werror -Wextra
 SRCDIR	:= *.c
 SRC		:= $(shell find $(SRCDIR) -name '*.c')
 
@@ -18,11 +17,11 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@make -C $(LIBFT)
 	@cp libft/libft.a .
-	@$(CC) -g $(FLAGS) $(CFLAGS) $(READLINE) $(OBJ) libft.a -lreadline  -o $@
+	$(CC) -g $(CFLAGS) $(FLAGS) $(READLINE) $(OBJ) libft.a -lreadline  -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(@D)
-	@$(CC) -g $(CFLAGS) -c $< -o $@
+	$(CC) -g $(CFLAGS) -c $< -o $@
 	echo "cleaned"
 
 clean:

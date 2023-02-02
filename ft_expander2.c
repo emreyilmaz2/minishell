@@ -6,7 +6,7 @@
 /*   By: emyilmaz <emyilmaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 05:25:59 by emyilmaz          #+#    #+#             */
-/*   Updated: 2023/01/24 19:50:46 by emyilmaz         ###   ########.fr       */
+/*   Updated: 2023/01/30 04:37:04 by emyilmaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,14 @@ void	expander_trim_squote(t_mini **list_two, t_expander **expander)
 	free((*list_two)->data);
 	(*list_two)->data = ft_strdup((*expander)->src);
 	free((*expander)->src);
+}
+
+void	no_greens(t_mini ***lst2)
+{
+	char	*arr;
+
+	arr = ft_strdup((**lst2)->data);
+	free((**lst2)->data);
+	(**lst2)->data = ft_strtrim2(arr, 34);
+	free(arr);
 }
