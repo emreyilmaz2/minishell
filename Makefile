@@ -6,7 +6,7 @@ CFLAGS	:= -ggdb -I $(INCLUDE)
 LIBFT	= libft
 READLINE = -lreadline -L /goinfre/homebrew/opt/readline/lib
 FLAGS = -Wall -Werror -Wextra
-SRCDIR	:= *.c
+SRCDIR	:= source/*.c
 SRC		:= $(shell find $(SRCDIR) -name '*.c')
 
 OBJDIR	:= ./obj

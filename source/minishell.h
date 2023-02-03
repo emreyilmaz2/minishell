@@ -21,7 +21,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/stat.h>
-# include "libft/source/libft.h"
+# include "../libft/source/libft.h"
 
 typedef struct ss_list
 {
